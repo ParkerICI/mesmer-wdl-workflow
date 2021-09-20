@@ -7,8 +7,8 @@
 ## ### Inputs
 ## flat_nuc: flattened (single channel) nuclear image, Required
 ## flat_cyto: flattened (single channel) cytoplasmic/membrane image
-## compartment: type of segmentation to run. must be one of: "nuclear", "membrane", "whole-cell"
-##     NOTE: use of "whole-cell" or "membrane" requires a flat_cyto input file
+## compartment: type of segmentation to run. must be one of: "nuclear", whole-cell", "both"
+##     NOTE: use of "whole-cell" or "both" requires a flat_cyto input file
 ##
 ## Maintainer: Marshall Thompson (mthompson@parkerici.org)
 ##
@@ -27,8 +27,8 @@ workflow mesmerWorkflow {
     Int mem_gb = 4
     String docker_image = "vanvalenlab/deepcell-applications:0.3.0"
 
-    if (compartment == "membrane") { 
-        call mesmer_membrane { input: flat_nuc=flat_nuc, flat_cyto=flat_cyto, mem_gb=mem_gb,
+    if (compartment == "both") { 
+        call mesmer_both { input: flat_nuc=flat_nuc, flat_cyto=flat_cyto, mem_gb=mem_gb,
                          docker_image = docker_image }
     }
     if (compartment == "whole-cell") { 
@@ -99,7 +99,7 @@ task mesmer_wc {
     }
 }
 
-task mesmer_membrane {
+task mesmer_both {
 
     File flat_cyto
     File flat_nuc
@@ -113,7 +113,7 @@ task mesmer_membrane {
 
     python /usr/src/app/run_app.py mesmer --nuclear-image $NUC_FILE \
       --membrane-image $MEM_FILE --output-directory /usr/src/app \
-      --output-name mask.tif --compartment "membrane"
+      --output-name mask.tif --compartment "both"
 
     echo "copying result mask"
     cp /usr/src/app/mask.tif .
