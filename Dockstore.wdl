@@ -48,7 +48,7 @@ task mesmer_nuc {
 
     command <<<
 
-    export NUC_FILE=${flat_nuc}
+    export NUC_FILE="${flat_nuc}"
 
     python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
       --output-directory /usr/src/app --output-name mask.tif \
@@ -77,8 +77,8 @@ task mesmer_wc {
 
     command <<<
 
-    export NUC_FILE=${flat_nuc}
-    export MEM_FILE=${flat_cyto}
+    export NUC_FILE="${flat_nuc}"
+    export MEM_FILE="${flat_cyto}"
 
     python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
       --membrane-image "$MEM_FILE" --output-directory /usr/src/app \
@@ -108,8 +108,8 @@ task mesmer_both {
 
     command <<<
 
-    export NUC_FILE=${flat_nuc}
-    export MEM_FILE=${flat_cyto}
+    export NUC_FILE="${flat_nuc}"
+    export MEM_FILE="${flat_cyto}"
 
     python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
       --membrane-image "$MEM_FILE" --output-directory /usr/src/app \
