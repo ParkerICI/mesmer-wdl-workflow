@@ -50,7 +50,7 @@ task mesmer_nuc {
 
     export NUC_FILE=${flat_nuc}
 
-    python /usr/src/app/run_app.py mesmer --nuclear-image "${NUC_FILE}" \
+    python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
       --output-directory /usr/src/app --output-name mask.tif \
       --compartment "nuclear"
 
@@ -80,8 +80,8 @@ task mesmer_wc {
     export NUC_FILE=${flat_nuc}
     export MEM_FILE=${flat_cyto}
 
-    python /usr/src/app/run_app.py mesmer --nuclear-image "${NUC_FILE}" \
-      --membrane-image "${MEM_FILE}" --output-directory /usr/src/app \
+    python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
+      --membrane-image "$MEM_FILE" --output-directory /usr/src/app \
       --output-name mask.tif --compartment "whole-cell"
 
     echo "copying result mask"
@@ -111,8 +111,8 @@ task mesmer_both {
     export NUC_FILE=${flat_nuc}
     export MEM_FILE=${flat_cyto}
 
-    python /usr/src/app/run_app.py mesmer --nuclear-image "${NUC_FILE}" \
-      --membrane-image "${MEM_FILE}" --output-directory /usr/src/app \
+    python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
+      --membrane-image "$MEM_FILE" --output-directory /usr/src/app \
       --output-name mask.tif --compartment "both"
 
     echo "copying result mask"
