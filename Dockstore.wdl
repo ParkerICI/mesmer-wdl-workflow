@@ -36,15 +36,16 @@ workflow mesmerWorkflow {
 #                         docker_image = docker_image }
 #    }
 
-    String mask_name = ( if !rename_to_sampleid then "mask" else sample_id ) + ".tif"
+    String nuc_mask_name = if !rename_to_sampleid then "nuc_mask.tif" else (sample_id + "_nuc_mask.tif")
+    String wc_mask_name = if !rename_to_sampleid then "wc_mask.tif" else (sample_id + "_wc_mask.tif")
 
     if (compartment == "whole-cell") { 
         call mesmer_wc { input: flat_nuc=flat_nuc, flat_cyto=flat_cyto, mem_gb=mem_gb,
-                         mask_name=mask_name, docker_image=docker_image }
+                         mask_name=wc_mask_name, docker_image=docker_image }
     }
     if (compartment == "nuclear") { 
         call mesmer_nuc { input: flat_nuc=flat_nuc, mem_gb=mem_gb,                         
-                          mask_name=mask_name, docker_image=docker_image }
+                          mask_name=nuc_mask_name, docker_image=docker_image }
     }    
 }
 
