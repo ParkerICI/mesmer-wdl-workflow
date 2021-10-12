@@ -25,9 +25,8 @@ workflow mesmerWorkflow {
     File flat_nuc
     File? flat_cyto
     String compartment = "nuclear"
-    Boolean? rename_to_sampleid = FALSE
+    Boolean? rename_to_sampleid = false
     String? sample_id 
-    String mask_name = "mask.tif"
 
     Int mem_gb = 4
     String docker_image = "vanvalenlab/deepcell-applications:0.3.1"
@@ -37,9 +36,7 @@ workflow mesmerWorkflow {
 #                         docker_image = docker_image }
 #    }
 
-    if (rename_to_sampleid) {
-        mask_name = sample_id + ".tif"
-    }
+    String mask_name = ( if !rename_to_sampleid then "mask" else sample_id ) + ".tif"
 
     if (compartment == "whole-cell") { 
         call mesmer_wc { input: flat_nuc=flat_nuc, flat_cyto=flat_cyto, mem_gb=mem_gb,
