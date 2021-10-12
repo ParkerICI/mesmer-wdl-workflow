@@ -7,8 +7,10 @@
 ## ### Inputs
 ## flat_nuc: flattened (single channel) nuclear image, Required
 ## flat_cyto: flattened (single channel) cytoplasmic/membrane image
-## compartment: type of segmentation to run. must be one of: "nuclear", whole-cell", "both"
-##     NOTE: use of "whole-cell" or "both" requires a flat_cyto input file
+## compartment: type of segmentation to run. must be one of: "nuclear" or whole-cell"
+##     NOTE: use of "whole-cell" requires a flat_cyto input file
+## sample_id: ID of the sample used for the cyto and nuc images
+## rename_to_sampleid: resulting mask files are renamed to the provided sample ID (default FALSE)
 ##
 ## Maintainer: Marshall Thompson (mthompson@parkerici.org)
 ##
@@ -23,20 +25,29 @@ workflow mesmerWorkflow {
     File flat_nuc
     File? flat_cyto
     String compartment = "nuclear"
+    Boolean? rename_to_sampleid = FALSE
+    String? sample_id 
+    String mask_name = "mask.tif"
 
     Int mem_gb = 4
     String docker_image = "vanvalenlab/deepcell-applications:0.3.1"
 
-    if (compartment == "both") { 
-        call mesmer_both { input: flat_nuc=flat_nuc, flat_cyto=flat_cyto, mem_gb=mem_gb,
-                         docker_image = docker_image }
+#    if (compartment == "both") { 
+#        call mesmer_both { input: flat_nuc=flat_nuc, flat_cyto=flat_cyto, mem_gb=mem_gb,
+#                         docker_image = docker_image }
+#    }
+
+    if (rename_to_sampleid) {
+        mask_name = sample_id + ".tif"
     }
+
     if (compartment == "whole-cell") { 
         call mesmer_wc { input: flat_nuc=flat_nuc, flat_cyto=flat_cyto, mem_gb=mem_gb,
-                         docker_image = docker_image }
+                         mask_name=mask_name, docker_image=docker_image }
     }
     if (compartment == "nuclear") { 
-        call mesmer_nuc { input: flat_nuc=flat_nuc, mem_gb=mem_gb, docker_image = docker_image }
+        call mesmer_nuc { input: flat_nuc=flat_nuc, mem_gb=mem_gb,                         
+                          mask_name=mask_name, docker_image=docker_image }
     }    
 }
 
@@ -45,22 +56,24 @@ task mesmer_nuc {
     File flat_nuc
     String docker_image
     Int mem_gb
+    String mask_name
 
     command <<<
 
     export NUC_FILE="${flat_nuc}"
+    export OUT_FILE="${mask_name}"
 
     python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
-      --output-directory /usr/src/app --output-name mask.tif \
+      --output-directory /usr/src/app --output-name $OUT_FILE \
       --compartment "nuclear"
 
     echo "copying result mask"
-    cp /usr/src/app/mask.tif .
+    cp /usr/src/app/$OUT_FILE .
     
     >>>
 
     output {
-        File cell_mask = "mask.tif"
+        File cell_mask = "${mask_name}"
     }
 
     runtime {
@@ -74,23 +87,25 @@ task mesmer_wc {
     File flat_nuc
     String docker_image
     Int mem_gb
+    String mask_name
 
     command <<<
 
     export NUC_FILE="${flat_nuc}"
     export MEM_FILE="${flat_cyto}"
+    export OUT_FILE="${mask_name}"
 
     python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
       --membrane-image "$MEM_FILE" --output-directory /usr/src/app \
-      --output-name mask.tif --compartment "whole-cell"
+      --output-name $OUT_FILE --compartment "whole-cell"
 
     echo "copying result mask"
-    cp /usr/src/app/mask.tif .
+    cp /usr/src/app/$OUT_FILE .
     
     >>>
 
     output {
-        File cell_mask = "mask.tif"
+        File cell_mask = "${mask_name}"
     }
 
     runtime {
@@ -99,36 +114,37 @@ task mesmer_wc {
     }
 }
 
-task mesmer_both {
-
-    File flat_cyto
-    File flat_nuc
-    String docker_image
-    Int mem_gb
-
-    command <<<
-
-    export NUC_FILE="${flat_nuc}"
-    export MEM_FILE="${flat_cyto}"
-
-    python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
-      --membrane-image "$MEM_FILE" --output-directory /usr/src/app \
-      --output-name mask.tif --compartment "both"
-
-    echo "copying result mask"
-    cp /usr/src/app/mask.tif .
-    
-    >>>
-
-    output {
-        File cell_mask = "mask.tif"
-    }
-
-    runtime {
-        docker: docker_image
-        memory: mem_gb + "GB"
-    }
-
-}
+## This task is commented for now, as the mesmer output when using "both"
+## is not as expected (not creating a dual channel tiff)
+# task mesmer_both {
+#
+#    File flat_cyto
+#    File flat_nuc
+#    String docker_image
+#    Int mem_gb
+#
+#    command <<<
+#
+#    export NUC_FILE="${flat_nuc}"
+#    export MEM_FILE="${flat_cyto}"
+#
+#    python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
+#      --membrane-image "$MEM_FILE" --output-directory /usr/src/app \
+#      --output-name mask.tif --compartment "both"
+#
+#    echo "copying result mask"
+#    cp /usr/src/app/mask.tif .
+#    
+#    >>>
+#
+#    output {
+#        File cell_mask = "mask.tif"
+#    }
+#
+#    runtime {
+#        docker: docker_image
+#        memory: mem_gb + "GB"
+#    }
+# }
 
 
