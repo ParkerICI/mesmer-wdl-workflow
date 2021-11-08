@@ -42,7 +42,7 @@ task collapse {
 
     command <<<
 
-    python3 /collapse.py "${multi_tiff}" "${outfile}" 
+    python3 /collapse.py "${multi_tiff}" "${outfile}" "${channel_ids}"
     
     >>>
 
