@@ -1,0 +1,6 @@
+{
+  "collapseChannels.multi_tiff": "input_multi.tiff",
+  "collapseChannels.channel_ids": "[1, 2, 4]",
+  "collapseChannels.rename_to_sampleid": true,
+  "collapseChannels.sample_id": "mysample1"
+}
