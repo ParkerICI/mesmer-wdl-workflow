@@ -26,8 +26,8 @@
 ## be subject to different licenses. Users are responsible for checking that they are
 ## authorized to run all programs before running this script.
 
-import "https://github.com/ParkerICI/mesmer-wdl-workflow/blob/master/mesmerSeg.wdl" as mesmer
-import "https://github.com/ParkerICI/mesmer-wdl-workflow/blob/master/collapseChannels.wdl" as tifftools
+import "https://raw.githubusercontent.com/ParkerICI/mesmer-wdl-workflow/blob/master/mesmerSeg.wdl" as mesmer
+import "https://raw.githubusercontent.com/ParkerICI/mesmer-wdl-workflow/blob/master/collapseChannels.wdl" as tifftools
 
 workflow segmentation {
     File multi_tiff
