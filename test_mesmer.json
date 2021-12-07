@@ -1,0 +1,5 @@
+{
+  "mesmerWorkflow.flat_nuc": "nuclear_image_file.tif",
+  "mesmerWorkflow.flat_cyto": "cytoplasmic_image_file.tif",
+  "mesmerWorkflow.compartment": "nuclear | whole-cell | both"
+}
