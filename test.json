@@ -1,5 +1,8 @@
 {
-  "mesmerWorkflow.flat_nuc": "nuclear_image_file.tif",
-  "mesmerWorkflow.flat_cyto": "cytoplasmic_image_file.tif",
-  "mesmerWorkflow.compartment": "nuclear | whole-cell | both"
+  "segmentation.multi_tiff": "input_file.tiff",
+  "segmentation.nuc_channel_ids": "[3]",
+  "segmentation.wc_channel_ids": "[1, 2, 4]",
+  "segmentation.run_wc": true,
+  "segmentation.rename_to_sampleid": true,
+  "segmentation.sample_id": "mysample1"
 }
