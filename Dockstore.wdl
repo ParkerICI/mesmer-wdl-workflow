@@ -1,17 +1,22 @@
 ## Copyright Parker Institute for Cancer Immunotherapy, 2021
 ##
-## # Mesmer
+## # Mesmer segmentation 
 ##
-## Workflow for Mesmer segmentation of tiff images
+## Workflow for running mesmer segmentation of tiff images
 ##  
 ## ### Inputs
-## flat_nuc: flattened (single channel) nuclear image, Required
-## flat_cyto: flattened (single channel) cytoplasmic/membrane image
-## compartment: type of segmentation to run. must be one of: "nuclear" or whole-cell"
-##     NOTE: use of "whole-cell" requires a flat_cyto input file
-## sample_id: ID of the sample used for the cyto and nuc images
-## rename_to_sampleid: resulting mask files are renamed to the provided sample ID (default FALSE)
+## multi_tiff: multi-layer tiff file to be segmented
+## nuc_channel_ids: list of channels to combine/collapse for nuclear signal, json string (i.e. "[1, 2, 3]")
+## wc_channel_ids: list of channels to combine/collapse for membrane signal, json string (i.e. "[1, 2, 3]")
+## run_wc: boolean indicating whether whole cell segmentation should be run (default false)
+##     NOTE: use of "run_wc" requires a wc_channel_ids argument
+## sample_id: ID of the sample
+## rename_to_sampleid: resulting mask files are renamed to the provided sample ID (default false)
 ##
+## mem_gb: Gb of memory to provision for the mesmer worker
+## mesmer_docker_image: docker image that includes the mesmer tool
+## tiff_tools_docker_image: docker image that includes combine/collapse tiff tool
+## 
 ## Maintainer: Marshall Thompson (mthompson@parkerici.org)
 ##
 ## Github: [https://github.com/ParkerICI/mesmer-wdl-workflow](https://github.com/ParkerICI/mesmer-wdl-workflow)
@@ -21,128 +26,67 @@
 ## be subject to different licenses. Users are responsible for checking that they are
 ## authorized to run all programs before running this script.
 
-workflow mesmerWorkflow {
-    File flat_nuc
-    File? flat_cyto
-    String compartment = "nuclear"
+import "https://github.com/ParkerICI/mesmer-wdl-workflow/blob/master/mesmerSeg.wdl" as mesmer
+import "https://github.com/ParkerICI/mesmer-wdl-workflow/blob/master/collapseChannels.wdl" as tifftools
+
+workflow segmentation {
+    File multi_tiff
+    String nuc_channel_ids
+    String? wc_channel_ids
+    Boolean? run_wc = false
+
     Boolean? rename_to_sampleid = false
     String? sample_id 
 
     Int mem_gb = 4
-    String docker_image = "vanvalenlab/deepcell-applications:0.3.1"
+    String mesmer_docker_image = "vanvalenlab/deepcell-applications:0.3.1"
+    String tiff_tools_docker_image = "gcr.io/pici-internal/tiff-tools"
 
-#    if (compartment == "both") { 
-#        call mesmer_both { input: flat_nuc=flat_nuc, flat_cyto=flat_cyto, mem_gb=mem_gb,
-#                         docker_image = docker_image }
-#    }
 
+    String nuc_outfile = if !rename_to_sampleid then "combined.tif" else (sample_id + "_combined.tif")
     String nuc_mask_name = if !rename_to_sampleid then "nuc_mask.tif" else (sample_id + "_nuc_mask.tif")
-    String wc_mask_name = if !rename_to_sampleid then "wc_mask.tif" else (sample_id + "_wc_mask.tif")
 
-    if (compartment == "whole-cell") { 
-        call mesmer_wc { input: flat_nuc=flat_nuc, flat_cyto=flat_cyto, mem_gb=mem_gb,
-                         mask_name=wc_mask_name, docker_image=docker_image }
+    call tifftools.collapse as nucCollapse { 
+        input: 
+        multi_tiff=multi_tiff, 
+        mem_gb=mem_gb, 
+        docker_image=tiff_tools_docker_image, 
+        channel_ids=channel_ids, 
+        outfile=nuc_outfile 
     }
-    if (compartment == "nuclear") { 
-        call mesmer_nuc { input: flat_nuc=flat_nuc, mem_gb=mem_gb,                         
-                          mask_name=nuc_mask_name, docker_image=docker_image }
-    }    
+    call mesmer.mesmer_nuc as mesmerNuc { 
+        input: 
+        flat_nuc=nucCollapse.combined_tiff, 
+        mem_gb=mem_gb, 
+        mask_name=nuc_mask_name, 
+        docker_image=mesmer_docker_image 
+    }
+
+    if(run_wc){
+        String wc_outfile = if !rename_to_sampleid then "combined.tif" else (sample_id + "_combined.tif")
+        String wc_mask_name = if !rename_to_sampleid then "wc_mask.tif" else (sample_id + "_wc_mask.tif")
+        call tifftools.collapse as wcCollapse { 
+            input: 
+            multi_tiff=multi_tiff, 
+            mem_gb=mem_gb, 
+            docker_image=tiff_tools_docker_image, 
+            channel_ids=channel_ids, 
+            outfile=wc_outfile 
+        }
+        call mesmer.mesmer_wc as mesmerWC { 
+            input: 
+            flat_nuc=nucCollapse.combined_tiff, 
+            flat_cyto=wcCollapse.combined_tiff, 
+            mem_gb=mem_gb,
+            mask_name=wc_mask_name, 
+            docker_image=mesmer_docker_image 
+        }
+    }
+
+      output {
+        File nuc_mask = mesmerNuc.cell_mask
+        File? wc_mask = mesmerWC.cell_mask
+      }
 }
-
-task mesmer_nuc {
-
-    File flat_nuc
-    String docker_image
-    Int mem_gb
-    String mask_name
-
-    command <<<
-
-    export NUC_FILE="${flat_nuc}"
-    export OUT_FILE="${mask_name}"
-
-    python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
-      --output-directory /usr/src/app --output-name $OUT_FILE \
-      --compartment "nuclear"
-
-    echo "copying result mask"
-    cp /usr/src/app/$OUT_FILE .
-    
-    >>>
-
-    output {
-        File cell_mask = "${mask_name}"
-    }
-
-    runtime {
-        docker: docker_image
-        memory: mem_gb + "GB"
-    }
-}
-
-task mesmer_wc {
-    File flat_cyto
-    File flat_nuc
-    String docker_image
-    Int mem_gb
-    String mask_name
-
-    command <<<
-
-    export NUC_FILE="${flat_nuc}"
-    export MEM_FILE="${flat_cyto}"
-    export OUT_FILE="${mask_name}"
-
-    python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
-      --membrane-image "$MEM_FILE" --output-directory /usr/src/app \
-      --output-name $OUT_FILE --compartment "whole-cell"
-
-    echo "copying result mask"
-    cp /usr/src/app/$OUT_FILE .
-    
-    >>>
-
-    output {
-        File cell_mask = "${mask_name}"
-    }
-
-    runtime {
-        docker: docker_image
-        memory: mem_gb + "GB"
-    }
-}
-
-## This task is commented for now, as the mesmer output when using "both"
-## is not as expected (not creating a dual channel tiff)
-# task mesmer_both {
-#
-#    File flat_cyto
-#    File flat_nuc
-#    String docker_image
-#    Int mem_gb
-#
-#    command <<<
-#
-#    export NUC_FILE="${flat_nuc}"
-#    export MEM_FILE="${flat_cyto}"
-#
-#    python /usr/src/app/run_app.py mesmer --nuclear-image "$NUC_FILE" \
-#      --membrane-image "$MEM_FILE" --output-directory /usr/src/app \
-#      --output-name mask.tif --compartment "both"
-#
-#    echo "copying result mask"
-#    cp /usr/src/app/mask.tif .
-#    
-#    >>>
-#
-#    output {
-#        File cell_mask = "mask.tif"
-#    }
-#
-#    runtime {
-#        docker: docker_image
-#        memory: mem_gb + "GB"
-#    }
-# }
 
 
