@@ -26,8 +26,8 @@
 ## be subject to different licenses. Users are responsible for checking that they are
 ## authorized to run all programs before running this script.
 
-import "https://raw.githubusercontent.com/ParkerICI/mesmer-wdl-workflow/blob/master/mesmerSeg.wdl" as mesmer
-import "https://raw.githubusercontent.com/ParkerICI/mesmer-wdl-workflow/blob/master/collapseChannels.wdl" as tifftools
+import "https://raw.githubusercontent.com/ParkerICI/mesmer-wdl-workflow/master/mesmerSeg.wdl" as mesmer
+import "https://raw.githubusercontent.com/ParkerICI/mesmer-wdl-workflow/master/collapseChannels.wdl" as tifftools
 
 workflow segmentation {
     File multi_tiff
@@ -51,7 +51,7 @@ workflow segmentation {
         multi_tiff=multi_tiff, 
         mem_gb=mem_gb, 
         docker_image=tiff_tools_docker_image, 
-        channel_ids=channel_ids, 
+        channel_ids=nuc_channel_ids, 
         outfile=nuc_outfile 
     }
     call mesmer.mesmer_nuc as mesmerNuc { 
@@ -62,7 +62,7 @@ workflow segmentation {
         docker_image=mesmer_docker_image 
     }
 
-    if(run_wc){
+    if(run_wc == true){
         String wc_outfile = if !rename_to_sampleid then "combined.tif" else (sample_id + "_combined.tif")
         String wc_mask_name = if !rename_to_sampleid then "wc_mask.tif" else (sample_id + "_wc_mask.tif")
         call tifftools.collapse as wcCollapse { 
@@ -70,7 +70,7 @@ workflow segmentation {
             multi_tiff=multi_tiff, 
             mem_gb=mem_gb, 
             docker_image=tiff_tools_docker_image, 
-            channel_ids=channel_ids, 
+            channel_ids=wc_channel_ids, 
             outfile=wc_outfile 
         }
         call mesmer.mesmer_wc as mesmerWC { 
