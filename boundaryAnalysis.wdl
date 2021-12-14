@@ -66,9 +66,9 @@ task segment_analysis {
         File nonnuc_intensities = "${outfile_prefix}.nonnuclear_intensities.tsv"
         File membrane_intensities = "${outfile_prefix}.membrane_intensities.tsv"
         File segment_intensities = "${outfile_prefix}.segment_intensities.tsv"
-        File segment.features = "${outfile_prefix}.segment_features.tsv"
-        File boundary.features = "${outfile_prefix}.boundary_features.tsv"
-        File boundary.intensities = "${outfile_prefix}.boundary_intensities.tsv"
+        File segment_features = "${outfile_prefix}.segment_features.tsv"
+        File boundary_features = "${outfile_prefix}.boundary_features.tsv"
+        File boundary_intensities = "${outfile_prefix}.boundary_intensities.tsv"
     }
 
     runtime {
