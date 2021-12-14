@@ -31,7 +31,7 @@ workflow boundaryAnalysis {
     Int mem_gb = 4
     String docker_image = "gcr.io/pici-internal/tiff-tools"
 
-    String outfile_prefix = if !rename_to_sampleid then "segment_analysis" else sample_id
+    String? outfile_prefix = if !rename_to_sampleid then "segment_analysis" else sample_id
 
     call segment_analysis { 
         input: 
