@@ -57,8 +57,6 @@ task segment_analysis {
 
     python3 /segment_summary.py "${multi_tiff}" "${wc_mask}" "${nuc_mask}" "${outfile_prefix}" 
 
-    cp /usr/src/app/$OUT_FILE .
-    
     >>>
 
     output {
