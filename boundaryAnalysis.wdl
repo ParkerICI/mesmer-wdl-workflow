@@ -74,5 +74,6 @@ task segment_analysis {
     runtime {
         docker: docker_image
         memory: mem_gb + "GB"
+        maxRetries: 3
     }
 }
