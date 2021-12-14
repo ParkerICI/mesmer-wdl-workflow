@@ -1,0 +1,5 @@
+{
+  "boundaryAnalysis.multi_tiff": "multi_tiff.tiff",
+  "boundaryAnalysis.nuc_mask": "nuc_mask.tiff",
+  "boundaryAnalysis.wc_mask": "wc_mask.tiff"
+}
