@@ -1,6 +1,6 @@
 ## Copyright Parker Institute for Cancer Immunotherapy, 2021
 ##
-## # bootstrap-mibi-pixels
+## # boostrapMibiPixels
 ##
 ## Workflow for using Zaid Bustami's boostrap immune cell phenotyping method applied to pixels,
 ## as adapted w/modifications to Python.
@@ -24,7 +24,7 @@
 ## be subject to different licenses. Users are responsible for checking that they are
 ## authorized to run all programs before running this script.
 
-workflow bootstrap-mibi-pixels {
+workflow bootstrapMibiPixels {
     File multi_tiff
     File hierarchy
     File panel_excel_file
@@ -37,17 +37,17 @@ workflow bootstrap-mibi-pixels {
     String outfile = if !rename_to_sampleid then "classified.tif" else (sample_id + "_classified.tif")
     String outclasses = if !rename_to_sampleid then "class_labels.csv" else (sample_id + "_class_labels.csv")
 
-    call bootstrap { input: multi_tiff=multi_tiff,
-                            mem_gb=mem_gb,
-                            docker_image=docker_image,
-                            hierarchy=hierarchy,
-                            panel_excel_file=panel_excel_file,
-                            panel_sheet=panel_sheet,
-                            outfile=outfile,
-                            outclasses=outclasses }
+    call bootstrapMibiPixels { input: multi_tiff=multi_tiff,
+                                      mem_gb=mem_gb,
+                                      docker_image=docker_image,
+                                      hierarchy=hierarchy,
+                                      panel_excel_file=panel_excel_file,
+                                      panel_sheet=panel_sheet,
+                                      outfile=outfile,
+                                      outclasses=outclasses }
 }
 
-task collapse {
+task bootstrapMibiPixels {
 
     File multi_tiff
     File hierarchy
