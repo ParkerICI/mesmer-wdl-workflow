@@ -1,0 +1,8 @@
+{
+  "bootstrapMibiPixels.multi_tiff": "input_multi.tiff",
+  "bootstrapMibiPixels.hierarchy": "input_hierarchy.yml",
+  "bootstrapMibiPixels.panel_excel_file": "input_excel.xslx",
+  "bootstrapMibiPixels.panel_sheet": "mibi.panel",
+  "bootstrapMibiPixels.rename_to_sampleid": true,
+  "bootstrapMibiPixels.sample_id": "mysample1"
+}
