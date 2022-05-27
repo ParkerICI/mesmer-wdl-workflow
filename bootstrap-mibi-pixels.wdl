@@ -37,17 +37,17 @@ workflow bootstrapMibiPixels {
     String outfile = if !rename_to_sampleid then "classified.tif" else (sample_id + "_classified.tif")
     String outclasses = if !rename_to_sampleid then "class_labels.csv" else (sample_id + "_class_labels.csv")
 
-    call bootstrapMibiPixels { input: multi_tiff=multi_tiff,
-                                      mem_gb=mem_gb,
-                                      docker_image=docker_image,
-                                      hierarchy=hierarchy,
-                                      panel_excel_file=panel_excel_file,
-                                      panel_sheet=panel_sheet,
-                                      outfile=outfile,
-                                      outclasses=outclasses }
+    call bootstrapPixels { input: multi_tiff=multi_tiff,
+                                  mem_gb=mem_gb,
+                                  docker_image=docker_image,
+                                  hierarchy=hierarchy,
+                                  panel_excel_file=panel_excel_file,
+                                  panel_sheet=panel_sheet,
+                                  outfile=outfile,
+                                  outclasses=outclasses }
 }
 
-task bootstrapMibiPixels {
+task bootstrapPixels {
 
     File multi_tiff
     File hierarchy
