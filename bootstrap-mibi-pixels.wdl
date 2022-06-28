@@ -36,7 +36,7 @@ workflow bootstrapMibiPixels {
 
     String outfile = if !rename_to_sampleid then "classified.tif" else (sample_id + "_classified.tif")
     String outclasses = if !rename_to_sampleid then "class_labels.csv" else (sample_id + "_class_labels.csv")
-
+    String outlabels = if !rename_to_sampleid then "pixel_labels.tsv" else (sample_id + "_pixel_labels.tsv")
     call bootstrapPixels { input: multi_tiff=multi_tiff,
                                   mem_gb=mem_gb,
                                   docker_image=docker_image,
@@ -44,7 +44,8 @@ workflow bootstrapMibiPixels {
                                   panel_excel_file=panel_excel_file,
                                   panel_sheet=panel_sheet,
                                   outfile=outfile,
-                                  outclasses=outclasses }
+                                  outclasses=outclasses
+				  outlabels=outlabels }
 }
 
 task bootstrapPixels {
@@ -57,16 +58,18 @@ task bootstrapPixels {
     Int mem_gb
     String outfile
     String outclasses
+    String outlabels
 
     command <<<
 
-    python3 /bootstrap_mibi_pixels.py "${multi_tiff}" "${outfile}" --hierarchy "${hierarchy}" --excel "${panel_excel_file}" --excel-sheet "${panel_sheet}" --output-classes "${outclasses}"
+    python3 /bootstrap_mibi_pixels.py "${multi_tiff}" "${outfile}" --hierarchy "${hierarchy}" --excel "${panel_excel_file}" --excel-sheet "${panel_sheet}" --output-classes "${outclasses}" --output-pixel-labels "${outlabels}"
     
     >>>
 
     output {
         File output_class_image_file = "${outfile}"
         File output_class_labels_csv = "${outclasses}"
+        File output_pixel_labels_tsv = "${outlabels}"
     }
 
     runtime {
