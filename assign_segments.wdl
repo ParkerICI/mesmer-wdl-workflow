@@ -37,7 +37,7 @@ workflow assignSegments {
                                   mem_gb=mem_gb,
                                   docker_image=docker_image,
                                   types_csv=types_csv,
-                                  cell_types,
+                                  cell_types=cell_types,
                                   outfile=outfile}
 }
 
@@ -45,13 +45,14 @@ task runAssignment {
 
     File mask
     File types_csv
+    File cell_types
     String docker_image
     Int mem_gb
     String outfile
 
     command <<<
 
-    python /type_segments.py "${mask}" "${types_csv}"
+    python /type_segments.py "${mask}" "${types_csv}" "${cell_types}"
     mv segment_types.tsv "${outfile}" ## Rename segment_types.tsv to "outfile" 
 
     >>>
