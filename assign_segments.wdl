@@ -7,6 +7,7 @@
 ## ### Inputs
 ## mask: whole cell segmentation mask (tif)
 ## types_csv: output from pixel typing (csv)
+## cell_types: potential cell type assignments and their priorities (csv)
 ## sample_id: ID of the sample
 ## rename_to_sampleid: resulting file is renamed to the provided sample ID (default FALSE)
 ##
@@ -24,6 +25,7 @@
 workflow assignSegments {
     File mask
     File types_csv
+    File cell_types
     Boolean? rename_to_sampleid = false
     String? sample_id 
     Int mem_gb = 4
