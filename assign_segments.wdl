@@ -37,6 +37,7 @@ workflow assignSegments {
                                   mem_gb=mem_gb,
                                   docker_image=docker_image,
                                   types_csv=types_csv,
+                                  cell_types,
                                   outfile=outfile}
 }
 
