@@ -59,8 +59,8 @@ task runExpansion {
 
     command <<<
 
-    python /type_segments.py "${mask}" "${segment_types_csv}" "${pixel_types_csv}" "${cell_types}"
-    mv expanded_segment_types.csv "${outfile}" ## Rename segment_types.tsv to "outfile" 
+    python /expand_segmentation.py "${mask}" "${segment_types_csv}" "${pixel_types_csv}" "${cell_types}"
+    mv expanded_segment_types.csv "${outfile}" ## Rename segment_types.csv to "outfile" 
     mv expanded_full_mask.tif "${outmask}"
 
     >>>
