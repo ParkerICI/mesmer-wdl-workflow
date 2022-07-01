@@ -44,8 +44,8 @@ workflow bootstrapMibiPixels {
                                   panel_excel_file=panel_excel_file,
                                   panel_sheet=panel_sheet,
                                   outfile=outfile,
-                                  outclasses=outclasses
-				  outlabels=outlabels }
+                                  outclasses=outclasses,
+                                  outlabels=outlabels }
 }
 
 task bootstrapPixels {
