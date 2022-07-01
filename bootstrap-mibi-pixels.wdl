@@ -36,7 +36,7 @@ workflow bootstrapMibiPixels {
 
     String outfile = if !rename_to_sampleid then "classified.tif" else (sample_id + "_classified.tif")
     String outclasses = if !rename_to_sampleid then "class_labels.csv" else (sample_id + "_class_labels.csv")
-    String outlabels = if !rename_to_sampleid then "pixel_labels.tsv" else (sample_id + "_pixel_labels.tsv")
+    String outlabels = if !rename_to_sampleid then "pixel_labels.csv" else (sample_id + "_pixel_labels.csv")
     call bootstrapPixels { input: multi_tiff=multi_tiff,
                                   mem_gb=mem_gb,
                                   docker_image=docker_image,
