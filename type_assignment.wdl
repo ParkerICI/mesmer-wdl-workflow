@@ -34,6 +34,7 @@ workflow segmentation {
     File hierarchy
     File panel_excel_file
     File cell_types
+    File mask
     String panel_sheet
 
     Boolean? rename_to_sampleid = false
