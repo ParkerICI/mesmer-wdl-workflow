@@ -72,8 +72,6 @@ workflow segmentation {
 
 
       output {
-        File nuc_mask = mesmerNuc.cell_mask
-        File? wc_mask = mesmerWC.cell_mask
 
         File output_class_image_file = bootstrapPixels.output_class_image_file
         File output_class_labels_csv = bootstrapPixels.output_class_labels_csv
