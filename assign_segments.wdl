@@ -53,7 +53,7 @@ task runAssignment {
     command <<<
 
     python /type_segments.py "${mask}" "${types_csv}" "${cell_types}"
-    mv segment_types.tsv "${outfile}" ## Rename segment_types.tsv to "outfile" 
+    mv segment_types.csv "${outfile}" ## Rename segment_types.csv to "outfile" 
 
     >>>
 
