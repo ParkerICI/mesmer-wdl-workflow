@@ -69,7 +69,7 @@ task bootstrapPixels {
     output {
         File output_class_image_file = "${outfile}"
         File output_class_labels_csv = "${outclasses}"
-        File output_pixel_labels_tsv = "${outlabels}"
+        File output_pixel_labels_csv = "${outlabels}"
     }
 
     runtime {
