@@ -40,8 +40,7 @@ workflow segmentation {
     String? sample_id 
 
     Int mem_gb = 4
-    String pixels_docker_image = "gcr.io/pici-internal/tiff-tools:0.6"
-    String segments_docker_image = "gcr.io/pici-internal/tiff-tools:0.6"
+    String docker_image = "gcr.io/pici_internal/tiff-tools:0.6"
 
     String outim = if !rename_to_sampleid then "classified.tif" else (sample_id + "_classified.tif")
     String outclasses = if !rename_to_sampleid then "class_labels.csv" else (sample_id + "_class_labels.csv")
@@ -52,7 +51,7 @@ workflow segmentation {
         input: 
         multi_tiff=multi_tiff,
         mem_gb=mem_gb,
-        docker_image=pixels_docker_image,
+        docker_image=docker_image,
         hierarchy=hierarchy,
         panel_excel_file=panel_excel_file,
         panel_sheet=panel_sheet,
@@ -64,7 +63,7 @@ workflow segmentation {
         input: 
         mask=mask,
         mem_gb=mem_gb,
-        docker_image=segments_docker_image,
+        docker_image=docker_image,
         types_csv=bootstrapPixels.output_pixel_labels_csv,
         cell_types=cell_types,
         outsegments=outsegments
