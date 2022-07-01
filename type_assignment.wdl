@@ -55,9 +55,9 @@ workflow segmentation {
         hierarchy=hierarchy,
         panel_excel_file=panel_excel_file,
         panel_sheet=panel_sheet,
-        outim=outim,
+        outfile=outim,
         outclasses=outclasses,
-        outpixels=outpixels
+        outlabels=outpixels
     }
     call type_segments.runAssignment as runAssignment { 
         input: 
@@ -66,7 +66,7 @@ workflow segmentation {
         docker_image=docker_image,
         types_csv=bootstrapPixels.output_pixel_labels_csv,
         cell_types=cell_types,
-        outsegments=outsegments
+        outfile=outsegments
 
     }
 
