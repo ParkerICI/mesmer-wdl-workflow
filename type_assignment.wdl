@@ -40,7 +40,7 @@ workflow segmentation {
     Boolean? rename_to_sampleid = false
     String? sample_id 
 
-    Int mem_gb = 4
+    Int mem_gb = 16
     String docker_image = "gcr.io/pici_internal/tiff-tools:0.6"
 
     String outim = if !rename_to_sampleid then "classified.tif" else (sample_id + "_classified.tif")
