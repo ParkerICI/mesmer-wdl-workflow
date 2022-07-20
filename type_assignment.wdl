@@ -36,6 +36,7 @@ workflow segmentation {
     File cell_types
     File mask
     String panel_sheet
+    Int marker_threshold
 
     Boolean? rename_to_sampleid = false
     String? sample_id 
@@ -59,6 +60,7 @@ workflow segmentation {
         outfile=outim,
         outclasses=outclasses,
         outlabels=outpixels
+        marker_threshold=marker_threshold
     }
     call type_segments.runAssignment as runAssignment { 
         input: 
