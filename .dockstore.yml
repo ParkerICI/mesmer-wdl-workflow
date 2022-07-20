@@ -1,0 +1,12 @@
+version: 1.2
+workflows:
+  - subclass: WDL
+    primaryDescriptorPath: /boundaryAnalysis.wdl
+    testParameterFiles:
+      - /test_boundary.json
+    name: SegmentAnalysis
+  - subclass: WDL
+    primaryDescriptorPath: /listChannels.wdl
+    testParameterFiles:
+      - /test_list.json
+    name: List-Channels
