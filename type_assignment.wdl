@@ -59,9 +59,9 @@ workflow segmentation {
         panel_sheet=panel_sheet,
         outfile=outim,
         outclasses=outclasses,
-        outlabels=outpixels
+        outlabels=outpixels,
         marker_threshold=marker_threshold
-        
+
     }
     call type_segments.runAssignment as runAssignment { 
         input: 

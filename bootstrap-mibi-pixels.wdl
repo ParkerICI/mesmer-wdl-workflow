@@ -46,9 +46,9 @@ workflow bootstrapMibiPixels {
                                   panel_sheet=panel_sheet,
                                   outfile=outfile,
                                   outclasses=outclasses,
-                                  outlabels=outlabels 
+                                  outlabels=outlabels,
                                   marker_threshold=marker_threshold
-                                  
+
                               }
 }
 
