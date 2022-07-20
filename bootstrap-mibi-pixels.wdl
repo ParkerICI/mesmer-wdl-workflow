@@ -12,7 +12,7 @@
 ## panel_sheet: Sheet which contains panel info in Excel file.
 ## sample_id: ID of the sample
 ## rename_to_sampleid: resulting file is renamed to the provided sample ID (default FALSE)
-##
+## marker_threshold: percentile threshold of distribution used as cutoff for pixels to be classified as positive for marker.
 ##
 ##
 ## Maintainer: Ben Kamphaus (bkamphaus@parkerici.org)
@@ -29,6 +29,7 @@ workflow bootstrapMibiPixels {
     File hierarchy
     File panel_excel_file
     String panel_sheet
+    Int marker_threshold
     Boolean? rename_to_sampleid = false
     String? sample_id 
     Int mem_gb = 4
@@ -45,7 +46,8 @@ workflow bootstrapMibiPixels {
                                   panel_sheet=panel_sheet,
                                   outfile=outfile,
                                   outclasses=outclasses,
-                                  outlabels=outlabels }
+                                  outlabels=outlabels 
+                                  marker_threshold=marker_threshold}
 }
 
 task bootstrapPixels {
@@ -59,10 +61,11 @@ task bootstrapPixels {
     String outfile
     String outclasses
     String outlabels
+    Int marker_threshold
 
     command <<<
 
-    python3 /bootstrap_mibi_pixels.py "${multi_tiff}" "${outfile}" --hierarchy "${hierarchy}" --excel "${panel_excel_file}" --excel-sheet "${panel_sheet}" --output-classes "${outclasses}" --output-pixel-labels "${outlabels}"
+    python3 /bootstrap_mibi_pixels.py "${multi_tiff}" "${outfile}" --hierarchy "${hierarchy}" --excel "${panel_excel_file}" --excel-sheet "${panel_sheet}" --output-classes "${outclasses}" --output-pixel-labels "${outlabels}" --marker-threshold "${marker_threshold}"
     
     >>>
 
