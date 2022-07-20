@@ -36,13 +36,12 @@ workflow segmentation {
     File cell_types
     File mask
     String panel_sheet
-    
-    Float? marker_threshold = 0.5
+    Float marker_threshold
     Boolean? rename_to_sampleid = false
     String? sample_id 
 
     Int mem_gb = 16
-    String docker_image = "gcr.io/pici_internal/tiff-tools:0.6"
+    String docker_image = "gcr.io/pici_internal/tiff-tools:0.7"
 
     String outim = if !rename_to_sampleid then "classified.tif" else (sample_id + "_classified.tif")
     String outclasses = if !rename_to_sampleid then "class_labels.csv" else (sample_id + "_class_labels.csv")
