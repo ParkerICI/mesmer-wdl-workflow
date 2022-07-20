@@ -29,7 +29,7 @@ workflow bootstrapMibiPixels {
     File hierarchy
     File panel_excel_file
     String panel_sheet
-    Int marker_threshold
+    Float marker_threshold
     Boolean? rename_to_sampleid = false
     String? sample_id 
     Int mem_gb = 4
@@ -63,7 +63,7 @@ task bootstrapPixels {
     String outfile
     String outclasses
     String outlabels
-    Int marker_threshold
+    Float marker_threshold
 
     command <<<
 
