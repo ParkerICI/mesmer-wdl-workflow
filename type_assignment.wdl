@@ -61,6 +61,7 @@ workflow segmentation {
         outclasses=outclasses,
         outlabels=outpixels
         marker_threshold=marker_threshold
+        
     }
     call type_segments.runAssignment as runAssignment { 
         input: 

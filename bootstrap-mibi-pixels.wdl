@@ -47,7 +47,9 @@ workflow bootstrapMibiPixels {
                                   outfile=outfile,
                                   outclasses=outclasses,
                                   outlabels=outlabels 
-                                  marker_threshold=marker_threshold}
+                                  marker_threshold=marker_threshold
+                                  
+                              }
 }
 
 task bootstrapPixels {
