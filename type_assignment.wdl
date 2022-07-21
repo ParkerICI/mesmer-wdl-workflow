@@ -36,7 +36,7 @@ workflow segmentation {
     File cell_types
     File mask
     String panel_sheet
-    Float marker_threshold
+    Float? marker_threshold = 0.5
     Boolean? rename_to_sampleid = false
     String? sample_id 
 
