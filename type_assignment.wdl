@@ -32,10 +32,8 @@ import "https://raw.githubusercontent.com/ParkerICI/mesmer-wdl-workflow/master/a
 workflow segmentation {
     File multi_tiff
     File hierarchy
-    File panel_excel_file
     File cell_types
     File mask
-    String panel_sheet
     Float? marker_threshold = 0.5
     Boolean? rename_to_sampleid = false
     String? sample_id 
@@ -54,8 +52,6 @@ workflow segmentation {
         mem_gb=mem_gb,
         docker_image=docker_image,
         hierarchy=hierarchy,
-        panel_excel_file=panel_excel_file,
-        panel_sheet=panel_sheet,
         outfile=outim,
         outclasses=outclasses,
         outlabels=outpixels,
