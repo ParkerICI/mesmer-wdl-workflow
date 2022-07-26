@@ -25,7 +25,7 @@
 workflow assignSegments {
     File mask
     File types_csv
-    File cell_types
+    File hierarchy
     Boolean? rename_to_sampleid = false
     String? sample_id 
     Int mem_gb = 4
@@ -37,7 +37,7 @@ workflow assignSegments {
                                   mem_gb=mem_gb,
                                   docker_image=docker_image,
                                   types_csv=types_csv,
-                                  cell_types=cell_types,
+                                  hierarchy=hierarchy,
                                   outfile=outfile}
 }
 
@@ -45,14 +45,14 @@ task runAssignment {
 
     File mask
     File types_csv
-    File cell_types
+    File hierarchy
     String docker_image
     Int mem_gb
     String outfile
 
     command <<<
 
-    python /type_segments.py "${mask}" "${types_csv}" "${cell_types}"
+    python /type_segments.py "${mask}" "${types_csv}" "${hierarchy}"
     mv segment_types.csv "${outfile}" ## Rename segment_types.csv to "outfile" 
 
     >>>

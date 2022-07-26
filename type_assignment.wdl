@@ -32,7 +32,6 @@ import "https://raw.githubusercontent.com/ParkerICI/mesmer-wdl-workflow/master/a
 workflow segmentation {
     File multi_tiff
     File hierarchy
-    File cell_types
     File mask
     Float? marker_threshold = 0.5
     Boolean? rename_to_sampleid = false
@@ -64,7 +63,7 @@ workflow segmentation {
         mem_gb=mem_gb,
         docker_image=docker_image,
         types_csv=bootstrapPixels.output_pixel_labels_csv,
-        cell_types=cell_types,
+        hierarchy=hierarchy,
         outfile=outsegments
 
     }
