@@ -27,7 +27,6 @@ workflow expandSegmentation {
     File mask
     File segment_types_csv
     File pixel_types_csv
-    File cell_types
     Boolean? rename_to_sampleid = false
     String? sample_id 
     Int mem_gb = 4
@@ -41,7 +40,6 @@ workflow expandSegmentation {
                                   docker_image=docker_image,
                                   segment_types_csv=segment_types_csv,
                                   pixel_types_csv=pixel_types_csv,
-                                  cell_types=cell_types,
                                   outfile=outfile,
                                   outmask=outmask}
 }
@@ -51,7 +49,6 @@ task runExpansion {
     File mask
     File segment_types_csv
     File pixel_types_csv
-    File cell_types
     String docker_image
     Int mem_gb
     String outfile
@@ -59,7 +56,7 @@ task runExpansion {
 
     command <<<
 
-    python /expand_segmentation.py "${mask}" "${segment_types_csv}" "${pixel_types_csv}" "${cell_types}"
+    python /expand_segmentation.py "${mask}" "${segment_types_csv}" "${pixel_types_csv}"
     mv expanded_segment_types.csv "${outfile}" ## Rename segment_types.csv to "outfile" 
     mv expanded_full_mask.tif "${outmask}"
 
