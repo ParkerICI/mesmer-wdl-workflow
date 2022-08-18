@@ -32,13 +32,15 @@ workflow assignSegments {
     String docker_image = "gcr.io/pici-internal/tiff-tools"
 
     String outfile = if !rename_to_sampleid then "typed_segments.csv" else (sample_id + "_typed_segments.csv")
+    String outfile_conflicted = if !rename_to_sampleid then "conflicted_typed_segments.csv" else (sample_id + "_conflicted_typed_segments.csv")
     
     call runAssignment  {         input: mask=mask,
                                   mem_gb=mem_gb,
                                   docker_image=docker_image,
                                   types_csv=types_csv,
                                   hierarchy=hierarchy,
-                                  outfile=outfile}
+                                  outfile=outfile
+                                  outfile_conflicted=outfile_conflicted}
 }
 
 task runAssignment {
@@ -49,11 +51,13 @@ task runAssignment {
     String docker_image
     Int mem_gb
     String outfile
+    String outfile_conflicted
 
     command <<<
 
     python /type_segments.py "${mask}" "${types_csv}" "${hierarchy}"
     mv segment_types.csv "${outfile}" ## Rename segment_types.csv to "outfile" 
+    mv conflicted_segment_types.csv "${outfile_conflicted}"
 
     >>>
 

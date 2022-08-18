@@ -44,7 +44,8 @@ workflow segmentation {
     String outclasses = if !rename_to_sampleid then "class_labels.csv" else (sample_id + "_class_labels.csv")
     String outpixels = if !rename_to_sampleid then "pixel_labels.csv" else (sample_id + "_pixel_labels.csv")
     String outsegments = if !rename_to_sampleid then "typed_segments.csv" else (sample_id + "_typed_segments.csv")
-
+    String outfile_conflicted = if !rename_to_sampleid then "conflicted_typed_segments.csv" else (sample_id + "_conflicted_typed_segments.csv")
+    
     call type_pixels.bootstrapPixels as bootstrapPixels { 
         input: 
         multi_tiff=multi_tiff,
@@ -65,6 +66,7 @@ workflow segmentation {
         types_csv=bootstrapPixels.output_pixel_labels_csv,
         hierarchy=hierarchy,
         outfile=outsegments
+        outfile_conflicted=outfile_conflicted
 
     }
 
@@ -76,6 +78,7 @@ workflow segmentation {
         File output_pixel_labels_csv = bootstrapPixels.output_pixel_labels_csv
 
         File output_segment_class_file = runAssignment.output_segment_class_file
+        File output_conflicted_segment_class_file = runAssignment.output_conflicted_segment_class_file
 
       }
 }
