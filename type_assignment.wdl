@@ -65,7 +65,7 @@ workflow segmentation {
         docker_image=docker_image,
         types_csv=bootstrapPixels.output_pixel_labels_csv,
         hierarchy=hierarchy,
-        outfile=outsegments
+        outfile=outsegments,
         outfile_conflicted=outfile_conflicted
 
     }

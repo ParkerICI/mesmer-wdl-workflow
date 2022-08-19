@@ -63,6 +63,7 @@ task runAssignment {
 
     output {
         File output_segment_class_file = "${outfile}"
+        File output_conflicted_segment_class_file = "${outfile_conflicted}"
     }
 
     runtime {
