@@ -39,7 +39,7 @@ workflow assignSegments {
                                   docker_image=docker_image,
                                   types_csv=types_csv,
                                   hierarchy=hierarchy,
-                                  outfile=outfile
+                                  outfile=outfile,
                                   outfile_conflicted=outfile_conflicted}
 }
 
