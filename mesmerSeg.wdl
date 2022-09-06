@@ -75,6 +75,8 @@ task mesmer_nuc {
     }
 
     runtime {
+        gpuType: "nvidia-tesla-k80"
+        gpuCount: 2
         docker: docker_image
         memory: mem_gb + "GB"
     }
