@@ -29,7 +29,7 @@ workflow mesmerWorkflow {
     String? sample_id 
 
     Int mem_gb = 4
-    String docker_image = "vanvalenlab/deepcell-applications:0.3.1"
+    String docker_image = "vanvalenlab/deepcell-applications:0.4.0-gpu"
 
 #    if (compartment == "both") { 
 #        call mesmer_both { input: flat_nuc=flat_nuc, flat_cyto=flat_cyto, mem_gb=mem_gb,
